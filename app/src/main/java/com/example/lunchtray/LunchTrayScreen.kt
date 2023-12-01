@@ -15,29 +15,52 @@
  */
 package com.example.lunchtray
 
+import androidx.annotation.StringRes
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.lunchtray.ui.OrderViewModel
 
 // TODO: Screen enum
 
 // TODO: AppBar
+enum class LunchTrayScreen(@StringRes val title:Int){
+    Start(title = R.string.app_name),
+    EntreeMenu(title =R.string.choose_entree),
+    SideDishMenu(title = R.string.choose_side_dish),
+    AccompanimentMenu(title =R.string.choose_accompaniment ),
+    Checkout(title =R.string.order_checkout )
+}
+@Composable
+fun LunchTrayAppBar(
+    canNavigateBack:Boolean,
+    nagivateUp:() -> Unit,
+    modifier: Modifier = Modifier,
+    currentScreen: LunchTrayScreen
+){
 
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LunchTrayApp() {
+fun LunchTrayApp(
+    navController: NavController = rememberNavController()
+) {
     // TODO: Create Controller and initialization
-
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen =LunchTrayScreen.valueOf(backStackEntry?.destination?.route?: LunchTrayScreen.Start.name)
     // Create ViewModel
     val viewModel: OrderViewModel = viewModel()
 
     Scaffold(
         topBar = {
-            // TODO: AppBar
+            LunchTrayApp()
         }
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()

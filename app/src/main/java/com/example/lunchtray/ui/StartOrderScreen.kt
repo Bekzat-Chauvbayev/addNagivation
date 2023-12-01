@@ -15,6 +15,7 @@
  */
 package com.example.lunchtray.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,11 +32,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lunchtray.R
 
+
+
 @Composable
 fun StartOrderScreen(
     onStartOrderButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,

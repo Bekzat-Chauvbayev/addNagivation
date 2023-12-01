@@ -1,6 +1,7 @@
 
 package com.example.lunchtray
 
+import android.icu.text.CaseMap.Title
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -47,13 +48,14 @@ enum class LunchTrayScreen(@StringRes val title:Int){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LunchTrayAppBar(
+    @StringRes currentScreenTitle: Int,
     canNavigateBack:Boolean,
     nagivateUp:() -> Unit,
     modifier: Modifier = Modifier,
-    currentScreen: LunchTrayScreen
+
 ){
     TopAppBar(
-        title = { Text(stringResource(id = currentScreen.title))},
+        title = { Text(stringResource(id = currentScreenTitle))},
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack){
@@ -75,16 +77,17 @@ fun LunchTrayApp(
     val navController  = rememberNavController()
 
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen =LunchTrayScreen.valueOf(backStackEntry?.destination?.route?: LunchTrayScreen.Start.name)
-    // Create ViewModel
+    val currentScreen = LunchTrayScreen.valueOf(
+        backStackEntry?.destination?.route ?: LunchTrayScreen.Start.name
+    )
     val viewModel: OrderViewModel = viewModel()
 
     Scaffold(
         topBar = {
             LunchTrayAppBar(
+                currentScreenTitle = currentScreen.title,
                 canNavigateBack = navController.previousBackStackEntry!=null,
-                nagivateUp = {navController.navigateUp()},
-                currentScreen= currentScreen
+                nagivateUp = {navController.navigateUp()}
             )
         }
     ) { innerPadding ->
@@ -98,6 +101,10 @@ fun LunchTrayApp(
                     onStartOrderButtonClicked = {
                         navController.navigate(LunchTrayScreen.EntreeMenu.name)
                     },
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .padding(innerPadding)
+
                 )
             }
             composable(route = LunchTrayScreen.EntreeMenu.name) {
